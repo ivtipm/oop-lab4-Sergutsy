@@ -5,6 +5,7 @@ class Databass:
     __rej = []
     __year = []
     __country = []
+    file_name = ""
 
     def __init__(self):
         self.__id.append(0)
@@ -12,10 +13,11 @@ class Databass:
         self.__rej.append("Rtest")
         self.__year.append("Ytest")
         self.__country.append("Ctest")
+        self.file_name = "databass"
 
     # сохранение в файл
     def save(self):
-        f = open("databass.txt", "w")
+        f = open(self.file_name + ".txt", "w")
         f.write(str(len(self.__id)))
         f.write("\n")
         for i in self.__id:
@@ -29,7 +31,7 @@ class Databass:
     # загрузка из файла
     def load(self):
         try:
-            f = open("databass.txt", "r")
+            f = open(self.file_name + ".txt", "r")
             self.__id = []
             self.__name = []
             self.__rej = []

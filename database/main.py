@@ -3,9 +3,13 @@ from ui import Ui_MainWindow
 import sys
 from databass import *
 
-db = Databass()
+
 
 class mywindow(QtWidgets.QMainWindow):
+
+    # включение базы данных
+    db = Databass()
+
     def __init__(self):
         super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -26,25 +30,27 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton.clicked.connect(self.addClicked)
 
     def saveClicked(self):
-        db.save()
+        self.db.file_name = self.ui.file_name.text()
+        self.db.save()
 
     def loadClicked(self):
-        db.load()
-        self.ui.tableWidget.setRowCount(len(db.get_id()))
-        for i in db.get_id():
+        self.db.file_name = self.ui.file_name.text()
+        self.db.load()
+        self.ui.tableWidget.setRowCount(len(self.db.get_id()))
+        for i in self.db.get_id():
             self.ui.id.addItem(str(i))
             self.ui.id_2.addItem(str(i))
 
-        for i in range(len(db.get_id())):
-            info = QtWidgets.QTableWidgetItem(str(db.get_id()[i]))
+        for i in range(len(self.db.get_id())):
+            info = QtWidgets.QTableWidgetItem(str(self.db.get_id()[i]))
             self.ui.tableWidget.setItem(i, 0, info)
-            info = QtWidgets.QTableWidgetItem(db.get_name()[i])
+            info = QtWidgets.QTableWidgetItem(self.db.get_name()[i])
             self.ui.tableWidget.setItem(i, 1, info)
-            info = QtWidgets.QTableWidgetItem(db.get_rej()[i])
+            info = QtWidgets.QTableWidgetItem(self.db.get_rej()[i])
             self.ui.tableWidget.setItem(i, 2, info)
-            info = QtWidgets.QTableWidgetItem(db.get_year()[i])
+            info = QtWidgets.QTableWidgetItem(self.db.get_year()[i])
             self.ui.tableWidget.setItem(i, 3, info)
-            info = QtWidgets.QTableWidgetItem(db.get_country()[i])
+            info = QtWidgets.QTableWidgetItem(self.db.get_country()[i])
             self.ui.tableWidget.setItem(i, 4, info)
             for j in range(5):
                 self.ui.tableWidget.item(i, j).setBackground(QtGui.QColor(255, 255, 255))
@@ -55,24 +61,24 @@ class mywindow(QtWidgets.QMainWindow):
         print(pole)
         word = self.ui.word.text()
         print(word)
-        db.change(id, pole, word)
+        self.db.change(id, pole, word)
         self.ui.id.clear()
         self.ui.id_2.clear()
         self.loadClicked()
 
     def findClicked(self):
-        for i in range(len(db.get_id())):
+        for i in range(len(self.db.get_id())):
             for j in range(5):
                 self.ui.tableWidget.item(i, j).setBackground(QtGui.QColor(255, 255, 255))
         pole = self.ui.comboBox.currentText()
         word = self.ui.lineEdit.text()
-        id = db.find(pole, word)
+        id = self.db.find(pole, word)
         for i in range(5):
             self.ui.tableWidget.item(id, i).setBackground(QtGui.QColor(0, 0, 255))
 
     def deleteClicked(self):
         id = int(self.ui.id_2.currentText())
-        db.delete(id)
+        self.db.delete(id)
         self.ui.id.clear()
         self.ui.id_2.clear()
         self.loadClicked()
@@ -82,7 +88,7 @@ class mywindow(QtWidgets.QMainWindow):
         rej = self.ui.Rej.text()
         year = self.ui.Year.text()
         country = self.ui.Country.text()
-        db.append(name, rej, year, country)
+        self.db.append(name, rej, year, country)
         self.ui.Name.clear()
         self.ui.Rej.clear()
         self.ui.Year.clear()
